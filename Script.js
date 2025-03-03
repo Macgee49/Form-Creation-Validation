@@ -1,52 +1,50 @@
 // script.js
 
-// Select the registration form and add an event listener for form submission
-document.getElementById('registration-form').addEventListener('submit', function (e) {
-    e.preventDefault(); // Prevent the form from submitting normally
-  
-    // Get the feedback element and clear any previous messages
+document.addEventListener('DOMContentLoaded', () => {
+    // Select the form and feedback division
+    const form = document.getElementById('registration-form');
     const feedbackDiv = document.getElementById('form-feedback');
-    feedbackDiv.style.display = 'none';
-    feedbackDiv.innerHTML = '';
   
-    // Get and trim the form values
-    const username = document.getElementById('username').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
+    // Form submission event listener with event prevention
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
   
-    // Initialize an array to collect error messages
-    const errors = [];
+      // Retrieve and trim user inputs
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
   
-    // Validate username: Check if it's at least 3 characters long
-    if (username.length < 3) {
-      errors.push('Username must be at least 3 characters long.');
-    }
+      // Initialize validation variables
+      let isValid = true;
+      const messages = [];
   
-    // Validate email: Check for the presence of "@" and a dot (".") after "@"
-    const atSymbol = email.indexOf('@');
-    const dot = email.lastIndexOf('.');
-    if (atSymbol < 1 || dot < atSymbol + 2 || dot + 2 >= email.length) {
-      errors.push('Please enter a valid email address.');
-    }
+      // Username Validation: must be at least 3 characters long
+      if (username.length < 3) {
+        isValid = false;
+        messages.push('Username must be at least 3 characters long.');
+      }
   
-    // Validate password: Check if it's at least 6 characters long
-    if (password.length < 6) {
-      errors.push('Password must be at least 6 characters long.');
-    }
+      // Email Validation: must include both "@" and "."
+      if (!email.includes('@') || !email.includes('.')) {
+        isValid = false;
+        messages.push("Email must include an '@' and a '.'.");
+      }
   
-    // If there are errors, display them; otherwise, show a success message
-    if (errors.length > 0) {
+      // Password Validation: must be at least 8 characters long
+      if (password.length < 8) {
+        isValid = false;
+        messages.push('Password must be at least 8 characters long.');
+      }
+  
+      // Display feedback by making feedbackDiv visible
       feedbackDiv.style.display = 'block';
-      feedbackDiv.style.backgroundColor = '#ffbaba';
-      feedbackDiv.style.color = '#d8000c';
-      feedbackDiv.innerHTML = errors.join('<br>');
-    } else {
-      feedbackDiv.style.display = 'block';
-      feedbackDiv.style.backgroundColor = '#dff2bf';
-      feedbackDiv.style.color = '#4f8a10';
-      feedbackDiv.innerHTML = 'Registration successful!';
-      // Optionally, reset the form if needed:
-      // document.getElementById('registration-form').reset();
-    }
+      if (isValid) {
+        feedbackDiv.textContent = 'Registration successful!';
+        feedbackDiv.style.color = '#28a745';
+      } else {
+        feedbackDiv.innerHTML = messages.join('<br>');
+        feedbackDiv.style.color = '#dc3545';
+      }
+    });
   });
   
